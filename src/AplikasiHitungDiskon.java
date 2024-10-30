@@ -1,5 +1,8 @@
 
 import javax.swing.JOptionPane;
+import java.util.Map;
+import java.util.HashMap;
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -11,47 +14,73 @@ import javax.swing.JOptionPane;
  *
  * @author muham
  */
+
 public class AplikasiHitungDiskon extends javax.swing.JFrame {
+    private Map<String, Integer> kuponDiskonMap; // Deklarasi map untuk kode kupon
 
     /**
      * Creates new form AplikasiHitungDiskon
      */
     public AplikasiHitungDiskon() {
         initComponents();
+        initializeKuponDiskon();
     }
     
-   private void hitungDiskon() {
+    private void initializeKuponDiskon() {
+    kuponDiskonMap = new HashMap<>();
+    kuponDiskonMap.put("DISKON10", 10); // Kode kupon untuk diskon 10%
+    kuponDiskonMap.put("DISKON15", 15); // Kode kupon untuk diskon 15%
+    kuponDiskonMap.put("DISKON50", 50); // Kode kupon untuk diskon 50%
+    // Tambahkan variasi kode kupon lainnya di sini jika diperlukan
+}
+
+    
+private void hitungDiskon() {
     try {
         // Ambil harga asli dari input
         double hargaAsli = Double.parseDouble(txtHargaAsli.getText());
 
-        // Ambil persentase diskon dari combo box atau slider
-        int persentaseDiskon;
-        if (cmbDiskon.isVisible()) {
-            // Menggunakan nilai dari JComboBox
-            persentaseDiskon = Integer.parseInt(cmbDiskon.getSelectedItem().toString().replace("%", ""));
-        } else {
-            // Menggunakan nilai dari JSlider
-            persentaseDiskon = sliderDiskon.getValue();
+        // Ambil persentase diskon dari slider
+        int persentaseDiskonAwal = sliderDiskon.getValue();
+        
+        // Hitung harga setelah diskon awal
+        double penghematanAwal = hargaAsli * persentaseDiskonAwal / 100;
+        double hargaSetelahDiskonAwal = hargaAsli - penghematanAwal;
+
+        // Ambil kode kupon dari JTextField untuk diskon tambahan
+        String kodeKupon = txtKodeKupon.getText().trim();
+        int diskonKupon = 0;
+        
+        // Validasi kode kupon dan ambil diskon tambahan jika ada
+        if (!kodeKupon.isEmpty() && kuponDiskonMap.containsKey(kodeKupon)) {
+            diskonKupon = kuponDiskonMap.get(kodeKupon); // Ambil diskon kupon
+        } else if (!kodeKupon.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Kode kupon tidak valid.", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        // Hitung penghematan dan harga akhir
-        double penghematan = hargaAsli * persentaseDiskon / 100;
-        double hargaSetelahDiskon = hargaAsli - penghematan;
+        // Hitung harga setelah diskon tambahan dari kupon (jika ada)
+        double penghematanKupon = hargaSetelahDiskonAwal * diskonKupon / 100;
+        double hargaSetelahDiskonTotal = hargaSetelahDiskonAwal - penghematanKupon;
 
         // Tampilkan hasil di JTextField
-        txtPenghematan.setText(String.format("Rp %.2f", penghematan));
-        txtHargaSetelahDiskon.setText(String.format("Rp %.2f", hargaSetelahDiskon));
+        txtPenghematan.setText(String.format("Rp %.2f", penghematanAwal + penghematanKupon));
+        txtHargaSetelahDiskon.setText(String.format("Rp %.2f", hargaSetelahDiskonTotal));
 
         // Tambahkan ke riwayat perhitungan di JTextArea (jika ada)
         txtAreaRiwayat.append("Harga Asli: " + String.format("Rp %.2f", hargaAsli) +
-                              ", Diskon: " + persentaseDiskon + "%" +
-                              ", Penghematan: " + String.format("Rp %.2f", penghematan) +
-                              ", Harga Setelah Diskon: " + String.format("Rp %.2f", hargaSetelahDiskon) + "\n");
+                              ", Diskon Awal: " + persentaseDiskonAwal + "%" +
+                              ", Penghematan Awal: " + String.format("Rp %.2f", penghematanAwal) +
+                              ", Diskon Kupon: " + diskonKupon + "%" +
+                              ", Penghematan Kupon: " + String.format("Rp %.2f", penghematanKupon) +
+                              ", Harga Akhir: " + String.format("Rp %.2f", hargaSetelahDiskonTotal) + "\n");
     } catch (NumberFormatException e) {
         JOptionPane.showMessageDialog(this, "Masukkan harga yang valid.", "Error", JOptionPane.ERROR_MESSAGE);
     }
 }
+
+
+
+
 
 
 
@@ -80,7 +109,7 @@ public class AplikasiHitungDiskon extends javax.swing.JFrame {
         btnHitung = new javax.swing.JButton();
         txtPenghematan = new javax.swing.JTextField();
         txtHargaAsli = new javax.swing.JTextField();
-        txtDiskon = new javax.swing.JTextField();
+        txtKodeKupon = new javax.swing.JTextField();
         txtHargaSetelahDiskon = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -159,7 +188,7 @@ public class AplikasiHitungDiskon extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 63;
         gridBagConstraints.insets = new java.awt.Insets(12, 112, 5, 5);
-        jPanel2.add(txtDiskon, gridBagConstraints);
+        jPanel2.add(txtKodeKupon, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -183,7 +212,9 @@ public class AplikasiHitungDiskon extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 0.1;
         gridBagConstraints.insets = new java.awt.Insets(12, 12, 50, 50);
         jPanel2.add(jScrollPane1, gridBagConstraints);
 
@@ -324,9 +355,9 @@ public class AplikasiHitungDiskon extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSlider sliderDiskon;
     private javax.swing.JTextArea txtAreaRiwayat;
-    private javax.swing.JTextField txtDiskon;
     private javax.swing.JTextField txtHargaAsli;
     private javax.swing.JTextField txtHargaSetelahDiskon;
+    private javax.swing.JTextField txtKodeKupon;
     private javax.swing.JTextField txtPenghematan;
     // End of variables declaration//GEN-END:variables
 }
