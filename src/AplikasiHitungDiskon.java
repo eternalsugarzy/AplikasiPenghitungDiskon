@@ -30,6 +30,7 @@ public class AplikasiHitungDiskon extends javax.swing.JFrame {
     kuponDiskonMap = new HashMap<>();
     kuponDiskonMap.put("DISKON10", 10); // Kode kupon untuk diskon 10%
     kuponDiskonMap.put("DISKON15", 15); // Kode kupon untuk diskon 15%
+    kuponDiskonMap.put("DISKON25", 25);
     kuponDiskonMap.put("DISKON50", 50); // Kode kupon untuk diskon 50%
     // Tambahkan variasi kode kupon lainnya di sini jika diperlukan
 }
@@ -147,7 +148,7 @@ private void hitungDiskon() {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         jPanel2.add(jLabel4, gridBagConstraints);
 
-        jLabel5.setText("Harga Setelah Diiskon");
+        jLabel5.setText("Harga Setelah Diskon");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -198,7 +199,7 @@ private void hitungDiskon() {
         gridBagConstraints.insets = new java.awt.Insets(12, 112, 5, 5);
         jPanel2.add(txtHargaSetelahDiskon, gridBagConstraints);
 
-        jLabel6.setText("Vouncher ");
+        jLabel6.setText("Vouncher Diskon ");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
